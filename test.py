@@ -19,7 +19,6 @@ counter = solutions.ObjectCounter(
     line_width=2,
 )
 
-
 # --- Jetson Nano Camera Pipeline ---
 def gstreamer_pipeline(
     sensor_id=0,
@@ -39,7 +38,6 @@ def gstreamer_pipeline(
         f"videoconvert ! "
         f"video/x-raw, format=(string)BGR ! appsink"
     )
-
 
 # Use GStreamer pipeline for CSI camera
 cap = cv2.VideoCapture(gstreamer_pipeline(), cv2.CAP_GSTREAMER)
