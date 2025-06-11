@@ -1,0 +1,19 @@
+# Example for JetPack 4.6.1, Python 3.6.9
+wget https://nvidia.box.com/shared/static/4z8q4v1y4k8q3j8i6v5y6v3y3v1y4k8q.whl -O torch-1.10.0-cp36-cp36m-linux_aarch64.whl
+sudo apt-get install python3-pip libopenblas-base libopenmpi-dev
+pip3 install torch-1.10.0-cp36-cp36m-linux_aarch64.whl
+pip3 install torchvision==0.11.1
+
+git clone https://github.com/ultralytics/yolov5.git
+cd yolov5
+git checkout v5.0
+pip3 install -r requirements.txt
+
+mkdir weights
+cd weights
+wget https://github.com/ultralytics/yolov5/releases/download/v5.0/yolov5s.pt
+cd ..
+
+python3 detect.py --weights weights/yolov5s.pt --source "<your_gstreamer_pipeline>"
+
+python3 detect.py --weights yolov5s.pt --source "nvarguscamerasrc sensor-id=0 ! video/x-raw(memory:NVMM), width=1280, height=720, framerate=30/1 ! nvvidconv flip-method=0 ! video/x-raw, width=1280, height=720, format=BGRx ! videoconvert ! video/x-raw, format=BGR ! appsink"
