@@ -1,19 +1,15 @@
-sudo apt update
-sudo apt upgrade
-sudo apt install build-essential libssl-dev zlib1g-dev libncurses5-dev \
-libncursesw5-dev libreadline-dev libsqlite3-dev libgdbm-dev libdb5.3-dev \
-libbz2-dev libexpat1-dev liblzma-dev libffi-dev libc6-dev wget
+python3.8 -m venv ~/yolo11env
+source ~/yolo11env/bin/activate
 
-cd /
-wget https://www.python.org/ftp/python/3.8.12/Python-3.8.12.tar.xz
-tar -xf Python-3.8.12.tar.xz
-cd Python-3.8.12
+# Example for JetPack 4.6.1, Python 3.8
+wget https://nvidia.box.com/shared/static/4z8q4v1y4k8q3j8i6v5y6v3y3v1y4k8q.whl -O torch-1.10.0-cp38-cp38m-linux_aarch64.whl
+pip install torch-1.10.0-cp38-cp38m-linux_aarch64.whl
+pip install torchvision==0.11.1
 
-./configure --enable-optimizations
-make -j4
-sudo make altinstall
+pip install ultralytics
 
-python3.8 --version
+wget https://github.com/ultralytics/assets/releases/download/v0.0.0/yolo11n.pt
 
-pip install --upgrade pip
-pip install wheel
+export CSI_PIPELINE="nvarguscamerasrc sensor-id=0 ! video/x-raw(memory:NVMM),width=1280,height=720,framerate=30/1,format=NV12 ! nvvidconv ! video/x-raw,format=BGRx ! videoconvert ! video/x-raw,format=BGR ! appsink"
+
+yolo solutions count model=yolo11n.pt source="$CSI_PIPELINE" classes=[0] show=True
